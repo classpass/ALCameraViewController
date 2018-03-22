@@ -58,8 +58,8 @@ open class CameraViewController: UIViewController {
     var animationSpring: CGFloat = 0.5
     var rotateAnimation: UIViewAnimationOptions = .curveLinear
     
-    var cameraButtonEdgeConstraint: NSLayoutConstraint?
-    var cameraButtonGravityConstraint: NSLayoutConstraint?
+    var shutterButtonEdgeConstraint: NSLayoutConstraint?
+    var shutterButtonGravityConstraint: NSLayoutConstraint?
     
     var closeButtonEdgeConstraint: NSLayoutConstraint?
     var closeButtonGravityConstraint: NSLayoutConstraint?
@@ -96,15 +96,15 @@ open class CameraViewController: UIViewController {
         return cameraOverlay
     }()
     
-    let cameraButton : UIButton = {
+    let shutterButton : UIButton = {
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64))
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isEnabled = false
-        button.setImage(UIImage(named: "cameraButton",
+        button.setImage(UIImage(named: "shutterButton",
                                 in: CameraGlobals.shared.bundle,
                                 compatibleWith: nil),
                         for: .normal)
-        button.setImage(UIImage(named: "cameraButtonHighlighted",
+        button.setImage(UIImage(named: "shutterButtonHighlighted",
                                 in: CameraGlobals.shared.bundle,
                                 compatibleWith: nil),
                         for: .highlighted)
@@ -134,10 +134,20 @@ open class CameraViewController: UIViewController {
     let libraryButton : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "libraryButton",
-                                in: CameraGlobals.shared.bundle,
-                                compatibleWith: nil),
-                        for: .normal)
+        button.setTitle("Library", for: .normal)
+        button.backgroundColor = .white
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15.0)
+        return button
+    }()
+    
+    let cameraButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Camera", for: .normal)
+        button.backgroundColor = .white
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15.0)
         return button
     }()
     
@@ -200,8 +210,7 @@ open class CameraViewController: UIViewController {
         view.backgroundColor = UIColor.black
         [cameraView,
             cameraOverlay,
-            cameraButton,
-            closeButton,
+            shutterButton,
             flashButton,
             containerSwapLibraryButton].forEach({ view.addSubview($0) })
         [swapButton, libraryButton].forEach({ containerSwapLibraryButton.addSubview($0) })
@@ -226,12 +235,8 @@ open class CameraViewController: UIViewController {
         let statusBarOrientation = UIApplication.shared.statusBarOrientation
         let portrait = statusBarOrientation.isPortrait
         
-        configCameraButtonEdgeConstraint(statusBarOrientation)
-        configCameraButtonGravityConstraint(portrait)
-        
-        removeCloseButtonConstraints()
-        configCloseButtonEdgeConstraint(statusBarOrientation)
-        configCloseButtonGravityConstraint(statusBarOrientation)
+        configShutterButtonEdgeConstraint(statusBarOrientation)
+        configShutterButtonGravityConstraint(portrait)
         
         removeContainerConstraints()
         configContainerEdgeConstraint(statusBarOrientation)
@@ -354,7 +359,7 @@ open class CameraViewController: UIViewController {
     }
     
     @objc internal func notifyCameraReady() {
-        cameraButton.isEnabled = true
+        shutterButton.isEnabled = true
     }
     
     /**
@@ -362,7 +367,7 @@ open class CameraViewController: UIViewController {
      */
     private func setupVolumeControl() {
         volumeControl = VolumeControl(view: view) { [weak self] _ in
-            guard let enabled = self?.cameraButton.isEnabled, enabled else {
+            guard let enabled = self?.shutterButton.isEnabled, enabled else {
                 return
             }
             self?.capturePhoto()
@@ -374,10 +379,9 @@ open class CameraViewController: UIViewController {
      * layout.
      */
     private func setupActions() {
-        cameraButton.action = { [weak self] in self?.capturePhoto() }
+        shutterButton.action = { [weak self] in self?.capturePhoto() }
         swapButton.action = { [weak self] in self?.swapCamera() }
         libraryButton.action = { [weak self] in self?.showLibrary() }
-        closeButton.action = { [weak self] in self?.close() }
         flashButton.action = { [weak self] in self?.toggleFlash() }
     }
     
@@ -386,8 +390,7 @@ open class CameraViewController: UIViewController {
      * state of the camera.
      */
     private func toggleButtons(enabled: Bool) {
-        [cameraButton,
-            closeButton,
+        [shutterButton,
             swapButton,
             libraryButton].forEach({ $0.isEnabled = enabled })
     }

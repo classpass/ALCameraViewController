@@ -41,8 +41,8 @@ extension CameraViewController {
      * when the device is portrait, when landscape, pin
      * the button on the right part of the screen.
      */
-    func configCameraButtonEdgeConstraint(_ statusBarOrientation: UIInterfaceOrientation) {
-        view.autoRemoveConstraint(cameraButtonEdgeConstraint)
+    func configShutterButtonEdgeConstraint(_ statusBarOrientation: UIInterfaceOrientation) {
+        view.autoRemoveConstraint(shutterButtonEdgeConstraint)
         
         let attribute : NSLayoutAttribute = {
             switch statusBarOrientation {
@@ -53,15 +53,15 @@ extension CameraViewController {
             }
         }()
         
-        cameraButtonEdgeConstraint = NSLayoutConstraint(
-            item: cameraButton,
+        shutterButtonEdgeConstraint = NSLayoutConstraint(
+            item: shutterButton,
             attribute: attribute,
             relatedBy: .equal,
             toItem: view,
             attribute: attribute,
             multiplier: 1.0,
             constant: -8)
-        view.addConstraint(cameraButtonEdgeConstraint!)
+        view.addConstraint(shutterButtonEdgeConstraint!)
     }
     
     /**
@@ -70,18 +70,18 @@ extension CameraViewController {
      * When the device is landscape orientation, centerY
      * the button based on the height of screen.
      */
-    func configCameraButtonGravityConstraint(_ portrait: Bool) {
-        view.autoRemoveConstraint(cameraButtonGravityConstraint)
+    func configShutterButtonGravityConstraint(_ portrait: Bool) {
+        view.autoRemoveConstraint(shutterButtonGravityConstraint)
         let attribute : NSLayoutAttribute = portrait ? .centerX : .centerY
-        cameraButtonGravityConstraint = NSLayoutConstraint(
-            item: cameraButton,
+        shutterButtonGravityConstraint = NSLayoutConstraint(
+            item: shutterButton,
             attribute: attribute,
             relatedBy: .equal,
             toItem: view,
             attribute: attribute,
             multiplier: 1.0,
             constant: 0)
-        view.addConstraint(cameraButtonGravityConstraint!)
+        view.addConstraint(shutterButtonGravityConstraint!)
     }
     
     /**
@@ -126,7 +126,7 @@ extension CameraViewController {
             item: containerSwapLibraryButton,
             attribute: attributeOne,
             relatedBy: .equal,
-            toItem: cameraButton,
+            toItem: shutterButton,
             attribute: attributeTwo,
             multiplier: 1.0,
             constant: 0)
@@ -154,7 +154,7 @@ extension CameraViewController {
             item: containerSwapLibraryButton,
             attribute: attributeCenter,
             relatedBy: .equal,
-            toItem: cameraButton,
+            toItem: shutterButton,
             attribute: attributeCenter,
             multiplier: 1.0,
             constant: 0)
@@ -173,9 +173,9 @@ extension CameraViewController {
     
     /**
      * If the device is portrait, pin the SwapButton on the
-     * right side of the CameraButton.
+     * right side of the shutterButton.
      * If landscape, pin the SwapButton on the top of the
-     * CameraButton.
+     * shutterButton.
      */
     func configSwapButtonEdgeConstraint(_ statusBarOrientation : UIInterfaceOrientation) {
         
@@ -225,7 +225,7 @@ extension CameraViewController {
     
     /**
      * Configure the center of SwapButton, based on the
-     * axis center of CameraButton.
+     * axis center of shutterButton.
      */
     func configSwapButtonGravityConstraint(_ portrait: Bool) {
         swapButtonGravityConstraint = NSLayoutConstraint(
@@ -261,7 +261,7 @@ extension CameraViewController {
             item: closeButton,
             attribute: attribute,
             relatedBy: .equal,
-            toItem: attribute != .centerX ? view : cameraButton,
+            toItem: attribute != .centerX ? view : shutterButton,
             attribute: attribute,
             multiplier: 1.0,
             constant: attribute != .centerX ? 16 : 0)
@@ -272,7 +272,7 @@ extension CameraViewController {
      * Add the constraint for the CloseButton, based on
      * the device orientation.
      * If portrait, it pin the CloseButton on the CenterY
-     * of the CameraButton.
+     * of the shutterButton.
      * Else if landscape, pin this button on the Bottom
      * of superview.
      */
@@ -304,7 +304,7 @@ extension CameraViewController {
             item: closeButton,
             attribute: attribute,
             relatedBy: .equal,
-            toItem: attribute == .bottom || attribute == .top ? view : cameraButton,
+            toItem: attribute == .bottom || attribute == .top ? view : shutterButton,
             attribute: attribute,
             multiplier: 1.0,
             constant: constant)
@@ -326,7 +326,7 @@ extension CameraViewController {
      * Add the constraint of the LibraryButton, if the device
      * orientation is portrait, pin the right side of SwapButton
      * to the left side of LibraryButton.
-     * If landscape, pin the bottom side of CameraButton on the
+     * If landscape, pin the bottom side of shutterButton on the
      * top side of LibraryButton.
      */
     func configLibraryEdgeButtonConstraint(_ statusBarOrientation : UIInterfaceOrientation) {
@@ -377,7 +377,7 @@ extension CameraViewController {
     
     /**
      * Set the center gravity of the LibraryButton based
-     * on the position of CameraButton.
+     * on the position of shutterButton.
      */
     func configLibraryGravityButtonConstraint(_ portrait: Bool) {
         libraryButtonGravityConstraint = NSLayoutConstraint(
@@ -419,7 +419,7 @@ extension CameraViewController {
      right side of FlashButton to the right side of
      * superview.
      * Else if, centerX the FlashButton on the CenterX
-     * of CameraButton.
+     * of shutterButton.
      */
     func configFlashGravityButtonConstraint(_ statusBarOrientation: UIInterfaceOrientation) {
         view.autoRemoveConstraint(flashButtonGravityConstraint)
